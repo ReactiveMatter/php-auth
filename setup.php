@@ -8,20 +8,28 @@ else
 {
 	$db = new SQLite3("users.db");
 
-	$create_tables_query =
+$create_tables_query =
 'CREATE TABLE IF NOT EXISTS users
 (id INTEGER PRIMARY KEY AUTOINCREMENT,
 username varchar(255) NOT NULL,
 password varchar(255) NOT NULL,
+name varchar(255) NOT NULL,
 created datetime NOT NULL,
 last_updated datetime NOT NULL,
 role varchar(255) NOT NULL);
+
 CREATE TABLE IF NOT EXISTS auth_tokens
 (token varchar(255) NOT NULL PRIMARY KEY,
 username varchar(255) NOT NULL,
 created datetime NOT NULL
 );
-INSERT INTO users VALUES (NULL,"admin","'.password_hash("dbadmin", PASSWORD_DEFAULT).'","'.date("Y-m-d H:i:s").'","'.date("Y-m-d H:i:s").'","admin");';
+CREATE TABLE IF NOT EXISTS login_attempts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT,
+  ip TEXT NOT NULL,
+  attempted_at DATETIME NOT NULL
+);
+INSERT INTO users VALUES (NULL,"admin","'.password_hash("dbadmin", PASSWORD_DEFAULT).'", "Admin", "'.date("Y-m-d H:i:s").'","'.date("Y-m-d H:i:s").'","admin");';
 	
 	$result = $db->exec($create_tables_query);
 	if($result)
